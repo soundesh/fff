@@ -1,0 +1,39 @@
+.tableleft{
+  display:flex;
+  flex-direction: row;
+  width: 100%;
+  height: 100%;
+  border: 2px solid darkblue;
+  justify-content: space-between;
+  align-items: center;
+}
+.slidecontainer{
+  width: 100%;
+  height: 100%;
+  border: 2px solid darkblue;
+}
+.tableleft .wrapper {
+  width: 400px;
+  height: 400px;
+  } 
+
+  .meter{
+  width:100%;
+  height: 100%;
+  transform: rotate(180deg);
+
+  }
+  .low{
+    stroke: sandybrown;
+    stroke-width: 60;
+    fill:none;
+    stroke-dasharray: 471, 943;
+  }
+.avg{
+  stroke: blue;
+  stroke-width: 60;
+  fill:none;
+  stroke-dasharray: 314, 943;
+}
+
+

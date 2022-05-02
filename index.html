@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Argus</title>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href='./styles/table.css'>
+
+<link rel="stylesheet" href='./styles/tableBar.css'>
+
+</head>
+<body>
+    <article>
+    <div class="head">
+        <div class="tableheader">
+            <div class="tableleft">
+                  <div >
+                    <div class="slidecontainer">
+
+
+                         <input type="text" id="sliderInput" name="loanAmount" min="25000" max="1500000" value="50000" onkeyup="showVal(this.value)">
+                        <input id="slider" type="range" min="25000" max="1500000" value="50000" onchange="showVal(this.value)"  >
+                        <p>Value: <span id="demo"></span></p>
+
+                                                
+                         <input type="text" id="slider1Input" name="percentage" min="0.000" max="24.000" value="0.667" onkeyup="showVal1(this.value)">
+                        <input id="slider1" type="range" min="0.500" max="24.000" value="0.667" step='0.001' onchange="showVal1(this.value)">
+                        <p>Value: <span id="demo1"></span></p>
+                        <input type="text" id="slider2Input" name="year" min="12" max="60" value="12" onkeyup="showVal2(this.value)">
+                        <input id="slider2" type="range" min="12" value="12" max="60"  onchange="showVal2(this.value)">
+                        <p>Value: <span id="demo2"></span></p>
+
+                    </div>
+                  </div>
+                  <div class="wrapper"id="wrapper">
+                    <svg class="meter" id="meter">
+                    <circle class="low" id="low" r="150" cx="50%" cy="50%"></circle>
+
+                    <circle class="avg" id="avg" r="150" cx="50%" cy="50%"></circle>
+                     </svg>
+                   </div>
+            </div>
+
+            </div>
+            <div class="tableright"id="wrapper">
+
+            </div>
+        </div>
+        
+        <div class="tableBody" >
+
+                <table id="loandetail">
+                    <thead>
+                    <tr>
+                    <th>Month</th>
+                    <th>Opening Balance</th>
+                    <th>interest of Month</th>
+                    <th>Repayments</th>
+                    <th>Closing Balance</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                    <td id="Month"></td>
+                    <td id="Opening"></td>
+                    <td id="interest"></td>
+                    <td id="repayment"></td>
+                    <td id="Closing"></td>
+                    </tr>
+                    </tbody>
+                </table>
+
+        </div>
+    </div>
+    </article>
+
+    
+<script type="text/Javascript">
+
+    var sliderInput=document.getElementById('sliderInput')
+
+    var slider1Input=document.getElementById('slider1Input')
+    var slider=document.getElementById('slider')
+    var output=document.getElementById('demo')
+    var  slider1=document.getElementById('slider1')
+    var output1=document.getElementById('demo1')
+    var  slider2=document.getElementById('slider2')
+    var output2=document.getElementById('demo2')
+
+    output.innerHTML=slider.value
+ slider.oninput=function (){
+     output.innerHTML=this.value
+   }
+ output1.innerHTML=(slider1.value)
+ slider1.oninput=function (){
+     output1.innerHTML=(this.value)
+ }
+ output2.innerHTML=slider2.value
+ slider2.oninput=function (){
+     output2.innerHTML=this.value
+ }
+
+ function showVal(newVal){
+     if(newVal<=1500000 && newVal >=25000){
+        document.getElementById('demo').innerHTML=newVal;
+        slider.value=newVal
+        sliderInput.value=newVal;
+        // simpleinterest(principal,rate,year,payment);
+
+        const principal = simpleinterest(slider.value) 
+        dataArray(principal)
+
+     }
+}
+
+function showVal1(newVal){
+    if(newVal<=24.000 && newVal >=0.500){
+    document.getElementById('demo1').innerHTML=newVal;
+    slider1.value=newVal;
+    slider1Input.value=newVal;
+    var payment=4349
+    var rate = simpleinterest(slider1.value,payment) 
+    dataArray(rate)
+    }
+     
+}
+
+
+function showVal2(newVal){
+    if(newVal<=60 && newVal >=12){
+    document.getElementById('demo2').innerHTML=newVal;
+    slider2.value=newVal
+    slider2Input.value=newVal
+    var year=simpleinterest(slider2Input.value) 
+    dataArray(year)
+    }
+}
+ function simpleinterest(principal,rate,year,payment) {   
+   var principal= sliderInput.value
+   var rate=slider1.value
+    var year=slider2.value
+    var payment=4349
+ const open =((Number(principal)+((principal*rate*(year/12))/100))-payment)
+ const array=[{principal:principal, number1:(principal*rate*(year/12))/100 ,payment:payment,open}]
+let array1=[]
+ array1=array.slice(0,array.length-1)
+    for (let i = 0; i < year; i++) {
+        
+     const number1 =((array[i].principal*rate*(year/12))/100)
+     const open =(Number(array[i].principal)+Number(number1))-payment
+     array.push({principal:open,number1,payment,open})
+     }
+    for(let i=0;i<array.length-1;i++){
+        array[i].number1=array[i+1].number1
+        array[i].open=array[i+1].open
+    }
+    return array
+ }
+
+
+function dataArray(data) {
+    var table=document.getElementById('loandetail').getElementsByTagName ('tbody')[0];
+    var table1=document.getElementById('loandetail').rows.length
+    for(let i=0;i<table1;i++){
+        document.getElementById("loandetail").deleteRow(0);
+    }
+    data.slice(0,data.length-1).forEach((element,i,array)=> {
+        var newRow=table.insertRow(i)
+        cell1=newRow.insertCell(0)
+        cell1.innerHTML=i+1
+        cell1=newRow.insertCell(1)
+        cell1.innerHTML=Math.round(array[i].principal)
+        cell1=newRow.insertCell(2)
+        cell1.innerHTML=Math.round(array[i].number1)
+        cell1=newRow.insertCell(3)
+        cell1.innerHTML=Math.round(array[i].payment)
+        cell1=newRow.insertCell(4)
+        cell1.innerHTML=Math.round(array[i].open)
+    });
+}
+
+</script>
+</body>
+</html>
